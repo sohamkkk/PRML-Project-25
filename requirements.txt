@@ -1,0 +1,20 @@
+torch==2.1.0
+torchvision
+torchaudio
+transformers==4.35.2
+sentence-transformers==2.6.1
+scikit-learn==1.4.1.post1
+pandas
+numpy
+joblib
+streamlit
+
+#  if label and threshold is not None:
+#             if label=="FAKE":
+#                 st.success(f"Prediction using {model_choice}: {label}")
+#                 st.info(f"Model confidence: {threshold:.4f}")
+#             else:
+#                 st.success(f"Prediction using {model_choice}: {label}")
+#                 st.info(f"Model confidence: {threshold:.4f}")
+#          else:
+#             st.error("Model not supported.")
