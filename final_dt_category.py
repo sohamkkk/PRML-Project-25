@@ -84,9 +84,10 @@ def dt_predict(statement, web, date):
 
     return pred_label, confidence
 
-stmt = "PM modi hold high level meeting with the cabinet"
+stmt = "PM hold high level meeting with the cabinet"
 web = "NDTV"
 date = "Jan-21"
 label, conf = dt_predict(stmt, web, date)
-print(f"Prediction: {label} (Confidence: {conf:.4f})")
+print(f"Prediction: {label} (Confidence: {conf:.4f})") #confidence ko lite lena
+
 
