@@ -85,7 +85,7 @@ def dt_predict(statement, web, date):
 
     return pred_label
 
-stmt = "PM modi hold high level meeting with the cabinet"
+stmt = "PM hold high level meeting with the cabinet"
 web = "NDTV"
 date = "Jan-21"
 label = dt_predict(stmt, web, date)
