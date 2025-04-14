@@ -2,6 +2,9 @@
 # 📰 News Authentication & Domain Classifier
 A machine learning-powered tool designed to verify the authenticity of news articles and classify them into appropriate domains (e.g., Politics, COVID-19, Government Affairs, etc.).
 
+## Project Video
+  [![Watch the video](https://img.youtube.com/vi/Dl0tVbW0tiQ/hqdefault.jpg)](https://youtu.be/Dl0tVbW0tiQ)
+
 
 ## 📌 Project Objective
 
@@ -55,5 +58,8 @@ We would like to thank the following sources and contributors whose work helped 
 - [@Rudra Thakar (B23EE1100)](https://github.com/rudraThakar)
 - [@Kartik Gehlot (B23EE1088)](https://github.com/B23BB1024)
 - [@Raman Pareekh (B23EE1091)](https://github.com/Brainloft05)
+
+
+
 
 
