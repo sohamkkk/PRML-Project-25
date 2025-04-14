@@ -1,20 +1,38 @@
-torch==2.2.1
+# joblib==1.4.2
+newspaper3k
+
+Requests
+
+lxml
+lxml_html_clean
+xgboost
+
+# xgboost
+# hugging_face==0.13.4
+# torch==2.2.0
+# # torch==2.2.1
+# torchvision
+# torchaudio
+# # transformers==4.35.2
+# # transformers==4.30.2
+# transformers==4.36.2
+# # sentence-transformers==2.6.1
+# sentence_transformers==2.2.2
+# scikit-learn==1.4.1.post1
+# pandas
+# numpy
+
+# streamlit
+torch
 torchvision
 torchaudio
-transformers==4.35.2
-sentence-transformers==2.6.1
-scikit-learn==1.4.1.post1
+transformers
+sentence_transformers
+scikit-learn
 pandas
 numpy
 joblib
 streamlit
 
-#  if label and threshold is not None:
-#             if label=="FAKE":
-#                 st.success(f"Prediction using {model_choice}: {label}")
-#                 st.info(f"Model confidence: {threshold:.4f}")
-#             else:
-#                 st.success(f"Prediction using {model_choice}: {label}")
-#                 st.info(f"Model confidence: {threshold:.4f}")
-#          else:
-#             st.error("Model not supported.")
+
+
