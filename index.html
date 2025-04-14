@@ -457,7 +457,7 @@
             font-family: 'Font Awesome 6 Free';
             font-weight: 900;
             margin-right: 0.5rem;
-            color: var(--primary);
+            color: #0056b3;
         }
 
         .section {
@@ -475,9 +475,8 @@
             background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
         }
     </style>
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <body>
     <header>
@@ -503,7 +502,7 @@
             <a href="#dataset">Dataset</a>
             <a href="#models">Models</a>
             <a href="#performance">Performance</a>
-            <a href="#confusion">Confusion Matrices</a>
+            <a href="#results">Results</a>
             <a href="#demo">Demo</a>
             <a href="#acknowledgments">Acknowledgments</a>
         </nav>
@@ -657,21 +656,6 @@
             The images below showcase our Fake News and News Category Classifier website in action, demonstrating its
             functionality in detecting misinformation and classifying news topics.
         </p>
-
-        <div class="covariance-slideshow">
-            <button class="slide-prev">Previous</button>
-            <div class="slides-container">
-                <div class="slide">
-                    <img src="1.jpeg">
-                    <p>Website Demo 1</p>
-                </div>
-                <div class="slide">
-                    <img src="2.jpeg">
-                    <p>Website Demo 2</p>
-                </div>
-            </div>
-            <button class="slide-next">Next</button>
-        </div>
     </section>
 
     <section class="section" id="demo">
@@ -681,7 +665,7 @@
             action. This video showcases how our models detect misinformation and classify news topics.
         </p>
         <div class="video-container">
-            <iframe width="560" height="315" src="https://youtu.be/Dl0tVbW0tiQ?si=qatBRRyQsHR6TCCV"
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/Dl0tVbW0tiQ"
                 title="Project Demonstration Video" frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
@@ -699,12 +683,12 @@
 
     <footer>
         <p>News Classifier | PRML Course Project</p>
-        <p><a href="" style="color: var(--primary); text-decoration: none;">View on GitHub</a> | Developed by Rudra
+        <p><a href="#" style="color: #0056b3; text-decoration: none;">View on GitHub</a> | Developed by Rudra
             Thakar, Sahilpreet Singh, Raman Pareek, Soham Khairnar, Abhishek Garg, Karthik Gehlot</p>
     </footer>
 
     <script>
-        // Update script
+        // Slideshow script
         document.addEventListener('DOMContentLoaded', () => {
             const slides = document.querySelectorAll('.slide');
             let currentSlide = 0;
@@ -723,6 +707,8 @@
             document.querySelector('.slide-prev')?.addEventListener('click', () => showSlide(currentSlide - 1));
             document.querySelector('.slide-next')?.addEventListener('click', () => showSlide(currentSlide + 1));
         });
+
+        // Animation on scroll
         const sections = document.querySelectorAll('.section');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
