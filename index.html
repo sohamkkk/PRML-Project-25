@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fake News & News Category Classifier</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #fff;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: #f8f9fa;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin: 0;
+            color: #222;
+            transition: color 0.3s ease;
+            font-weight: 600;
+        }
+
+        header h1:hover {
+            color: #0056b3;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #666;
+            max-width: 800px;
+            margin: 0.5rem auto 0;
+        }
+
+        .team-names {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .team-names span {
+            white-space: nowrap;
+        }
+
+        .header-nav {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .header-nav a {
+            color: #0056b3;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .header-nav a:hover {
+            color: #003d82;
+            background-color: #e6f0ff;
+            border-radius: 4px;
+        }
+
+        .section {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .section h2 {
+            margin-bottom: 1rem;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 0.5rem;
+            color: #222;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .section h2:hover {
+            color: #0056b3;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .model-card {
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .model-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .model-card h3 {
+            margin: 0 0 0.5rem;
+            font-size: 1.3rem;
+            color: #222;
+            font-weight: 500;
+        }
+
+        .model-card p {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .popup {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            color: #333;
+            padding: 1.2rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 300px;
+            z-index: 1000;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .popup.above {
+            bottom: 100%;
+            margin-bottom: 10px;
+        }
+
+        .popup.below {
+            top: 100%;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
+
+        .model-card:hover .popup {
+            display: block;
+        }
+
+        .model-card:active .popup {
+            display: block;
+        }
+
+        .compare-section {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .compare-section:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #fff;
+            color: #333;
+        }
+
+        .compare-table th,
+        .compare-table td {
+            padding: 0.8rem;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .compare-table th {
+            background-color: #f8f9fa;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .compare-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .compare-table tr:hover {
+            background-color: #e6f0ff;
+            transition: background-color 0.2s ease;
+        }
+
+        .covariance-slideshow {
+            margin: 2rem auto;
+            max-width: 600px;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .covariance-slideshow:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .slides-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            max-width: 100%;
+            max-height: 80%;
+            object-fit: contain;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s ease;
+        }
+
+        .slide img:hover {
+            transform: scale(1.02);
+        }
+
+        .slide p {
+            margin: 0.5rem 0 0;
+            color: #444;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .slide-prev,
+        .slide-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #120101;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 4px;
+            z-index: 20;
+            transition: background 0.3s ease;
+        }
+
+        .slide-prev {
+            left: 10px;
+        }
+
+        .slide-next {
+            right: 10px;
+        }
+
+        .slide-prev:hover,
+        .slide-next:hover {
+            background: #e79f9d;
+        }
+
+        .video-container {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .video-container:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        footer {
+            font-size: 0.85rem;
+            background-color: #f8f9fa;
+            color: #666;
+            padding: 1.5rem;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            .team-names {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .header-nav {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+
+            .section {
+                padding: 1.5rem;
+                margin: 1.5rem auto;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .model-card {
+                padding: 1rem;
+            }
+
+            .popup {
+                max-width: 90%;
+                font-size: 0.85rem;
+                z-index: 1000;
+            }
+
+            .popup.above,
+            .popup.below {
+                left: 0;
+                transform: none;
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            .covariance-slideshow {
+                max-width: 100%;
+                height: 300px;
+            }
+
+            .video-container {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .team-names {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .header-nav {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        .slide-prev,
+        .slide-next {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .slide-prev::before {
+            content: '\f053';
+            /* Font Awesome chevron-left */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        .slide-next::before {
+            content: '\f054';
+            /* Font Awesome chevron-right */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+        }
+
+        .model-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .model-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .section h2::before {
+            content: '\f085';
+            /* Font Awesome gear icon */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-right: 0.5rem;
+            color: var(--primary);
+        }
+
+        .section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section {
+            background: linear-gradient(180deg, #ffffff 0%, #f9f9f9 100%);
+        }
+    </style>
+    </style>
+</head>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<body>
+    <header>
+        <h1>PRML Project</h1>
+        <p>Fake News and News Category Classifier — Detects misinformation and classifies news topics using various ML
+            techniques.</p>
+        <div class="team-names">
+            <span><a href="https://www.linkedin.com/in/rudra-thakar-19a83b287" target="_blank"
+                    rel="noopener noreferrer">Rudra Thakar</a></span>
+            <span><a href="https://www.linkedin.com/in/sps1001" target="_blank" rel="noopener noreferrer">Sahilpreet
+                    Singh</a></span>
+            <span><a href="https://www.linkedin.com/in/raman-pareek-3433bb295" target="_blank"
+                    rel="noopener noreferrer">Raman Pareek</a></span>
+            <span><a href="https://www.linkedin.com/in/soham-khairnar" target="_blank" rel="noopener noreferrer">Soham
+                    Khairnar</a></span>
+            <span><a href="https://www.linkedin.com/in/abhishek-garg-003340219" target="_blank"
+                    rel="noopener noreferrer">Abhishek Garg</a></span>
+            <span><a href="https://www.linkedin.com/in/kartik-gehlot-7aa0a6290" target="_blank"
+                    rel="noopener noreferrer">Karthik Gehlot</a></span>
+        </div>
+        <nav class="header-nav">
+            <a href="#overview">Overview</a>
+            <a href="#dataset">Dataset</a>
+            <a href="#models">Models</a>
+            <a href="#performance">Performance</a>
+            <a href="#confusion">Confusion Matrices</a>
+            <a href="#demo">Demo</a>
+            <a href="#acknowledgments">Acknowledgments</a>
+        </nav>
+    </header>
+    <section class="section" id="overview">
+        <h2>Project Overview</h2>
+        <p>
+            Our Fake News and News Category Classifier is a machine learning project designed to combat misinformation
+            and categorize news articles effectively. Using traditional and modern ML techniques, such as Naive Bayes,
+            SVM, Random Forest, and Neural Networks, we detect whether news is true or fake and classify it into
+            categories like COVID-19 or Elections. By leveraging BERT embeddings and metadata like publication dates and
+            sources, our models achieve high accuracy, with ANN reaching 98.7% in fake news detection. This project
+            showcases robust solutions for real-world news analysis challenges.
+        </p>
+    </section>
+
+    <section class="section" id="dataset">
+        <h2>Dataset Details</h2>
+        <ul>
+            <li><strong>Statements</strong>: News headlines or short articles</li>
+            <li><strong>Web</strong>: Source outlet (e.g., NDTV, Mint)</li>
+            <li><strong>Date</strong>: Published date</li>
+            <li><strong>Label</strong>: TRUE or FAKE</li>
+            <li><strong>Category</strong>: E.g., COVID-19, ELECTION, etc.</li>
+        </ul>
+        <br />
+        <strong>Preprocessing:</strong>
+        <ul>
+            <li>BERT embeddings for statements</li>
+            <li>Date parsing + feature extraction</li>
+            <li>Web source encoding</li>
+            <li>Cleaned and normalized inputs</li>
+        </ul>
+    </section>
+
+    <section class="section" id="models">
+        <h2>ML Models Used</h2>
+        <div class="card-grid">
+            <div class="model-card">
+                <h3>Stacking</h3>
+                <p>Combines ANN, SVM, and DT predictions into a larger matrix, then applies ANN for category
+                    classification.</p>
+                <div class="popup above">
+                    <h3>Stacking</h3>
+                    <p>Used for category classification. Combines outputs of ANN, SVM, and Decision Tree into a larger
+                        matrix, then applies an ANN to predict the news category. Leverages strengths of multiple models
+                        for improved category accuracy.</p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <h3>Decision Tree</h3>
+                <p>Tree-based model that splits data using features to make decisions. Interpretable and fast.</p>
+                <div class="popup above">
+                    <h3>Decision Tree</h3>
+                    <p>Builds interpretable rules by splitting data based on feature values. Good for understanding
+                        feature impact but can overfit. We used it with date and web features for classification.</p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <h3>SVM</h3>
+                <p>Maximizes margin between classes. Best performer for category classification.</p>
+                <div class="popup below">
+                    <h3>Support Vector Machine</h3>
+                    <p>Best performer for category classification (69% accuracy). Handled BERT embeddings well. Clear
+                        margin separator without kernel tricks, since embeddings already captured complex semantics.</p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <h3>Random Forest</h3>
+                <p>Ensemble of decision trees. Strong in binary classification.</p>
+                <div class="popup below">
+                    <h3>Random Forest</h3>
+                    <p>Achieved 97.28% in fake news detection. Lower (52.07%) in category classification. Handles
+                        high-dimensional data and reduces overfitting by averaging over many trees.</p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <h3>Boosting</h3>
+                <p>Sequential learning model. Good category accuracy via XGBoost-style model.</p>
+                <div class="popup below">
+                    <h3>Boosting (XGBoost style)</h3>
+                    <p>Sequentially learns from errors of previous models. We used XGBoost, reaching 64.73% in category
+                        classification. Strong learner that improves with iterations.</p>
+                </div>
+            </div>
+
+            <div class="model-card">
+                <h3>ANN</h3>
+                <p>Feed-forward neural network. Excellent for fake news detection.</p>
+                <div class="popup below">
+                    <h3>Artificial Neural Network</h3>
+                    <p>Multilayer perceptron. Achieved 98.7% in binary classification and 65% in category. Benefits from
+                        powerful deep features and regularization.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="compare-section" id="performance">
+        <h2>Performance Comparison</h2>
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>Fake News Accuracy</th>
+                    <th>Category Accuracy</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Stacking</td>
+                    <td>---</td>
+                    <td><strong>~78%</strong></td>
+                </tr>
+                <tr>
+                    <td>Decision Tree</td>
+                    <td>~92%</td>
+                    <td>~48%</td>
+                </tr>
+                <tr>
+                    <td>SVM</td>
+                    <td>---</td>
+                    <td>69%</td>
+                </tr>
+                <tr>
+                    <td>Random Forest</td>
+                    <td>97.28%</td>
+                    <td>52.07%</td>
+                </tr>
+                <tr>
+                    <td>Boosting (XGBoost)</td>
+                    <td>---</td>
+                    <td>64.73%</td>
+                </tr>
+                <tr>
+                    <td>ANN</td>
+                    <td><strong>98.7%</strong></td>
+                    <td>65%</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="section" id="results">
+        <h2>Results</h2>
+        <p>
+            The images below showcase our Fake News and News Category Classifier website in action, demonstrating its
+            functionality in detecting misinformation and classifying news topics.
+        </p>
+
+        <div class="covariance-slideshow">
+            <button class="slide-prev">Previous</button>
+            <div class="slides-container">
+                <div class="slide">
+                    <img src="/images/1.jpeg">
+                    <p>Website Demo 1</p>
+                </div>
+                <div class="slide">
+                    <img src="/images/2.jpeg">
+                    <p>Website Demo 2</p>
+                </div>
+            </div>
+            <button class="slide-next">Next</button>
+        </div>
+    </section>
+
+    <section class="section" id="demo">
+        <h2>Project Demonstg
+        </div>
+    </section>
+
+    <section class="section" id="acknowledgments">
+        <h2>Acknowledgments</h2>
+        <p>
+            This project was developed as part of our PRML (Pattern Recognition and Machine Learning) course. We express
+            our gratitude to our instructors and peers for their guidance and support throughout this endeavor.
+        </p>
+    </section>
+
+    <footer>
+        <p>News Classifier | PRML Course Project</p>
+        <p><a href="" style="color: var(--primary); text-decoration: none;">View on GitHub</a> | Developed by Rudra
+            Thakar, Sahilpreet Singh, Raman Pareek, Soham Khairnar, Abhishek Garg, Karthik Gehlot</p>
+    </footer>
+
+    <script>
+        // Update script
+        document.addEventListener('DOMContentLoaded', () => {
+            const slides = document.querySelectorAll('.slide');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                slides[currentSlide].classList.remove('active');
+                currentSlide = (index + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            if (slides.length > 0) {
+                slides[0].classList.add('active');
+                setInterval(() => showSlide(currentSlide + 1), 5000);
+            }
+
+            document.querySelector('.slide-prev')?.addEventListener('click', () => showSlide(currentSlide - 1));
+            document.querySelector('.slide-next')?.addEventListener('click', () => showSlide(currentSlide + 1));
+        });
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+
+</html>
