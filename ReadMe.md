@@ -21,6 +21,14 @@ To develop a robust system that:
 - Compares different machine learning models like SVM, Decision Tree, ANN, etc.  
 - Uses a **combination of the best models** (SVM + Decision Tree + ANN) to improve topic detection  
 - Designed to work in a way that **mimics human judgment** by checking real-time news articles online
+- 
+## 📌 How to run
+
+- Zero step --> Clone the repository using either HTTPS or SSH.
+  Then in the terminal -->
+- First run --> pip install -r requirements.txt
+- Then start the server with --> streamlit run app2.py
+
 
 ## 🛠️ Tech Stack
 
